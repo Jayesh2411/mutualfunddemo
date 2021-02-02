@@ -50,25 +50,38 @@ public class MutualFundProcessor {
                 JSONObject obj = (JSONObject) jsonArray.get(i);
                 dateAndNav.put(obj.get("date").toString(), obj.get("nav").toString());
             }
+            previousDate = previousDate.minusYears(horizon);
+            for(int i=0;i<horizon*12;i++) {
+            	LocalDate endDate = previousDate.plusMonths(i);
+                String endDateString = getFormattedDate(endDate).trim();
+                
+                while (true) {
+                	if(dateAndNav.containsKey(endDateString)) {
+                		break;
+                	}
+                    endDate = endDate.minusDays(1l);
+                    endDateString = getFormattedDate(endDate);
+                }
+                LocalDate startDate = endDate.minusYears(periodOfInvestment);
+                String startDateString = getFormattedDate(startDate);
+                while (true) {
+                	if(dateAndNav.containsKey(startDateString)) {
+                		break;
+                	}
+                    startDate = startDate.minusDays(1l);
+                    startDateString = getFormattedDate(startDate);
+                }
+                double startNav = Double.parseDouble(dateAndNav.get(startDateString));
+                double endNav = Double.parseDouble(dateAndNav.get(endDateString));
+                double returns = Math.pow((endNav / startNav), 1 / periodOfInvestment)-1;
+                System.out.println("Return :"+returns*100);
+                System.out.println("Start NAV :" +startNav);
+                System.out.println("End NAV :" +endNav);
+                System.out.println("Start Date:" +startDateString);
+                System.out.println("End Date:" +endDateString);
 
-            LocalDate startDate = previousDate.minusYears(periodOfInvestment);
-            String startDateString = getFormattedDate(startDate).trim();
-            
-            while (true) {
-            	if(dateAndNav.containsKey(startDateString)) {
-            		break;
-            	}
-                startDate = startDate.minusDays(1l);
-                startDateString = getFormattedDate(startDate);
             }
-            System.out.println(startDateString);
-
-            LocalDate endDate = previousDate;
-            double startNav = Double.parseDouble(dateAndNav.get(getFormattedDate(startDate)));
-            double endNav = Double.parseDouble(dateAndNav.get(getFormattedDate(endDate)).toString());
-            double returns = Math.pow((endNav / startNav), 1 / periodOfInvestment);
-            System.out.println(returns);
-
+            
             scanner.close();
 
         } catch (MalformedURLException e) {
