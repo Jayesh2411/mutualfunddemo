@@ -9,6 +9,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class MutualFundProcessor {
@@ -47,16 +48,20 @@ public class MutualFundProcessor {
             HashMap<String, String> dateAndNav = new HashMap<String, String>();
             for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject obj = (JSONObject) jsonArray.get(i);
-                System.out.println(obj.get("date").toString());
                 dateAndNav.put(obj.get("date").toString(), obj.get("nav").toString());
             }
 
             LocalDate startDate = previousDate.minusYears(periodOfInvestment);
-            while (!dateAndNav.containsKey(startDate.toString())) {
-                System.out.println(dateAndNav.entrySet());
-                System.out.println(dateAndNav.keySet());
+            String startDateString = getFormattedDate(startDate).trim();
+            
+            while (true) {
+            	if(dateAndNav.containsKey(startDateString)) {
+            		break;
+            	}
                 startDate = startDate.minusDays(1l);
+                startDateString = getFormattedDate(startDate);
             }
+            System.out.println(startDateString);
 
             LocalDate endDate = previousDate;
             double startNav = Double.parseDouble(dateAndNav.get(getFormattedDate(startDate)));
