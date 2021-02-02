@@ -22,4 +22,4 @@ TC04:
   The response has null NAV data/ nav dates
   
 TC05:
-  When the period of Investment or horizon is zer/null
+  When the period of Investment or horizon is zero/null
