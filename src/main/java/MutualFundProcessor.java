@@ -27,8 +27,6 @@ public class MutualFundProcessor {
     public void process(int periodOfInvestment, int horizon) {
 
         LocalDate previousDate = LocalDate.now().minusDays(1l);
-        String previousDateString = getFormattedDate(previousDate);
-
         try {
             URL url = new ConnectionImpl().getURLConnection(urlString);
 
